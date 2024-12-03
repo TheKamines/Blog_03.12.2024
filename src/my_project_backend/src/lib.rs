@@ -7,16 +7,20 @@ mod blog;
 thread_local! {
     static BLOGS: RefCell<Vec<Blog>> = RefCell::new(Vec::new());
 }
-// komentarze ?
 
 #[ic_cdk::update]
-fn add_blog(title: String, content: String, tags: Vec<String>) -> Result<String, String>{
+fn add_blog(title: String, content: String, tags: Vec<String>) -> Result<Blog, String>{
     if title.len() > 250 {
         return Err("Title is too long!".to_string())
     }
     let blog = Blog::new(title, content, tags);
     BLOGS.with(|blogs| blogs.borrow_mut().push(blog));
-    Ok("Added new blog".to_string())
+    let last_blog = BLOGS.with(|blogs| 
+        blogs
+        .borrow()
+        .last()
+        .expect("Vec should not be empty").clone());
+    Ok(last_blog)
 }
 
 #[ic_cdk::query]
