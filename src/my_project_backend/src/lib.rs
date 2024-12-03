@@ -21,7 +21,7 @@ fn add_blog(title: String, content: String, tags: Vec<String>) -> Result<Blog, S
         .last()
         .expect("Vec should not be empty").clone());
     Ok(last_blog)
-}
+} 
 
 #[ic_cdk::query]
 fn get_blogs() -> Vec<Blog> {
